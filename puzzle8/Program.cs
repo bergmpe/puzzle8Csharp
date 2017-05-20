@@ -15,17 +15,12 @@ namespace puzzle8
             int[,] boardToSolve = new int[,] { { 1, 0, 3 },
                                                { 4, 2, 5 },
                                                { 7, 8, 6 } };
-            List<State> result;
             Puzzle8 puzzle = new Puzzle8();
-            State initialState = new State(puzzle.readPuzzle(), 0, null);
-
-            
-            result = puzzle.aStar(initialState);
-            foreach (var item in result)
+            while (true)
             {
-                puzzle.print(item.BoardPosition);
-                System.Console.WriteLine();
+                puzzle.solve( puzzle.readPuzzle() );
             }
+
             System.Console.ReadKey();
         }
     }

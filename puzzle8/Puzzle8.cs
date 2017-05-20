@@ -14,7 +14,21 @@ namespace puzzle8
     {
         public int[,] target = new int[,] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 0 } };
 
-        public List<State> aStar(State initial)
+        public void solve(int[,] board) {
+            if (hasSolution(board))
+            {
+                List<State> result;
+                State initialState = new State(board, 0, null);
+                result = aStar(initialState);
+                print(result);
+            }
+            else
+            {
+                Console.WriteLine("Sorry! the puzzle entered do not have solution.");
+            }
+        }
+
+        private List<State> aStar(State initial)
         {
             PriorityQueue priorityQueue = new PriorityQueue();
             List<int[,]> neighborStates = new List<int[,]>(4);
@@ -44,6 +58,22 @@ namespace puzzle8
                 neighborStates.Clear();
             }
             return result;
+        }
+
+        /*Se o numero de inversôes é impar, o puzzle nâo tem solução. Consideramos o board como um array de
+         uma dimensao. Uma inversao ocorre quando um numero(x) é seguido por um numero(y) menor do x.
+         Por exemplo: { 1, 2, 3, 4, 5, 6, 8, 7, 0} nesse caso temos uma inversão pois 8 > 7. OBS: nao nos 
+         preocupamos com o espaco vazio. Representado pelo numero zero.*/
+        private bool hasSolution(int[,] board)
+        {
+            int[] boardArray = board.Cast<int>().ToArray();
+            int inverterCounter = 0;
+
+            for (int i = 0; i < 8; i++)
+                for (int j = i + 1; j < 9; j++)
+                    if ( (boardArray[i] != 0) && (boardArray[j] != 0) && boardArray[i] > boardArray[j])
+                        inverterCounter++;
+            return (inverterCounter % 2) == 0;
         }
 
         public int[,] readPuzzle()
@@ -169,7 +199,8 @@ namespace puzzle8
             }
         }
 
-        public void print(){
+        public void printTarget(){
+            Console.WriteLine("this program looks for the following target:");
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
@@ -183,7 +214,7 @@ namespace puzzle8
             }
         }
 
-        public void print(int[,] vector)
+        private void print(int[,] vector)
         {
             for (int i = 0; i < 3; i++)
             {
@@ -194,6 +225,15 @@ namespace puzzle8
                     else
                         System.Console.Write("  ");
                 }
+                System.Console.WriteLine();
+            }
+        }
+
+        private void print(List<State> states)
+        {
+            foreach (var item in states)
+            {
+                print(item.BoardPosition);
                 System.Console.WriteLine();
             }
         }
